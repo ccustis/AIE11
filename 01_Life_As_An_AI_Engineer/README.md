@@ -9,7 +9,7 @@
 
 | 📰 Session | ⏺️ Recording | 🖼️ Slides | 📝 Technical Challenge | 📁 Feedback |
 |:-----------------|:------------|:----------|:--------|:------------|
-| You are here! | [Recording!](https://us02web.zoom.us/rec/share/jAarPK0giKhBtd7Sk2SUaJQRTBGQSewEVIgMquMDU0kgeL6e5p3PdGVstrCZx3A.QaC8mvzYsqtvEnoZ) <br> passcode: `9kvErL?d` | [Slides](https://canva.link/5n1omu8z39yrhat) |    Coming Soon!      |  [11/9](https://forms.gle/znovu6Fieh3zaSx49) |
+| You are here! | [Recording!](https://us02web.zoom.us/rec/share/jAarPK0giKhBtd7Sk2SUaJQRTBGQSewEVIgMquMDU0kgeL6e5p3PdGVstrCZx3A.QaC8mvzYsqtvEnoZ) <br> passcode: `9kvErL?d` | [Slides](https://canva.link/5n1omu8z39yrhat) |   [Week 1](../00_Technical_Challenges/Week 1/README.md)      |  [11/9](https://forms.gle/znovu6Fieh3zaSx49) |
 
 ---
 
