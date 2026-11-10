@@ -2,9 +2,9 @@
 
 Quick links are to help you **easily navigate individual session information** for `AI Engineering`!  
 
-| 📰 Session Sheet | ⏺️ Recording | 🖼️ Slides | 👨‍💻 Repo | 📝 Homework | 📁 Feedback |
-|:-----------------|:------------|:----------|:--------|:------------|:------------|
-|                  |             |           |         |             |             |
+| 📰 Session | ⏺️ Recording | 🖼️ Slides | 📝 Technical Challenge | 📁 Feedback |
+|:-----------------|:------------|:----------|:--------|:------------|
+| [Life As An AI Engineer ](https://github.com/AI-Maker-Space/AIE11/tree/main/01_Life_As_An_AI_Engineer) | [Recording!](https://us02web.zoom.us/rec/share/jAarPK0giKhBtd7Sk2SUaJQRTBGQSewEVIgMquMDU0kgeL6e5p3PdGVstrCZx3A.QaC8mvzYsqtvEnoZ) <br> passcode: `9kvErL?d` | [Slides](https://canva.link/5n1omu8z39yrhat) |    Coming Soon!      |  [11/9](https://forms.gle/znovu6Fieh3zaSx49) |
 
 ## Initial Setup
 1. [Environment Setup — **start here**](../00_Docs/Prerequisites/Initial_Setup/README.md)
@@ -15,15 +15,3 @@ Quick links are to help you **easily navigate individual session information** f
 6. [Coding Agents](../00_Docs/Prerequisites/Initial_Setup/5_Coding_Agents)
 7. [LLM APIs](../00_Docs/Prerequisites/Initial_Setup/6_LLM_APIs)
 8. [Setup Verification Scripts](../00_Docs/Prerequisites/Initial_Setup/scripts)
-
-## Onramp Sessions
-A 4-week live session series designed to help prepare for the AI Engineering Bootcamp.
-
-> ℹ️ _If you don't have experience building end-to-end applications, or you didn't **really** understand [The AI Engineer Challenge](https://aimakerspace.io/aie-challenge) when you completed it, this material may be useful to you. If you're already a senior software engineer, it may not be._
-
-| 📰 Session Topic                 | ⏺️ Recording                                                                                                                                   | 🖼️ Slides                                                                                                                                                               | 👨‍💻 Repo                                                                                                                                                                                    |
-|:---------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| AI Assisted Development          | [Recording!](https://us02web.zoom.us/rec/share/ztpkCP9S-eTyVe7CCFLpF2CM3_PWu-P81DBGmcZeYAW7DtSK9VL1elHIoDjdm_oW.RC-nq31aDuoYziOV) (f1#j7Nr^)  | [Slides](https://www.canva.com/design/DAG6SNRlYoI/bpELIN03JVB1xNkd9yo8lA/edit?utm_content=DAG6SNRlYoI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) | [Repo](https://github.com/AI-Maker-Space/AIE11/tree/main/00_Docs/Prerequisites/The_AI_Engineer_Onramp_Cohort_2/Session_01_AI_Assisted_Development)                                         |
-| Backend Development & Deployment | [Recording!](https://us02web.zoom.us/rec/share/IXFR3_h72eZ1TbXWWVRiaE4xTSQIPBnpIRZUR-M5450uR8CIo-5kza1ixH9BanrA.KKu-OIqI1YHr3cfZ ) (=7Ld3A2L) | [Slides](https://www.canva.com/design/DAG492HUYsU/d98h86nIBAbpLsJ2TBFriQ/edit?utm_content=DAG492HUYsU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) | [Repo](https://github.com/AI-Maker-Space/AIE11/tree/main/00_Docs/Prerequisites/The_AI_Engineer_Onramp_Cohort_2/Session_02_Back_End_Web_App_Development_%26_Deployment_of_LLM_Applications) |
-| Connecting Frontend              | [Recording!](https://us02web.zoom.us/rec/share/LUaI1ZfiHiS8CKPdkiLdV3P7nC28VdfdgQevT8QSQZ1nxhrBQ5OZMdiRTcxkdcdG.XuT4aDzDRCfgJ42M) (Ys&0R.s3)  | [Slides](https://www.canva.com/design/DAG6SJk52Ac/h9ESc8SDgV9ARGtHs70sHQ/edit?utm_content=DAG6SJk52Ac&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) | [Repo](https://github.com/AI-Maker-Space/AIE11/tree/main/00_Docs/Prerequisites/The_AI_Engineer_Onramp_Cohort_2/Session_03_Connecting_Frontend_UIs_to_Backend_Deployments)                  |
-| Complex End to End               | [Recording!](https://us02web.zoom.us/rec/share/0XHmXdmnULUwBUsRGaDeHYP6yZcuzZZADyd42X3Nrbxi73X8dUYuC4YSvBHRVxBC.8g8j2q03cpENfEnb) (y^X2R#Qx)  | [Slides](https://www.canva.com/design/DAG6SMVEUDw/xmV9dQcJlpCNr-tYpL5hZw/edit?utm_content=DAG6SMVEUDw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton) | [Repo](https://github.com/AI-Maker-Space/AIE11/tree/main/00_Docs/Prerequisites/The_AI_Engineer_Onramp_Cohort_2/Session_04_Bulding_Complex_End_to_End_LLM_Applications)                     |
