@@ -4,7 +4,7 @@ Quick links are to help you **easily navigate individual session information** f
 
 | 📰 Session | ⏺️ Recording | 🖼️ Slides | 📝 Technical Challenge | 📁 Feedback |
 |:-----------------|:------------|:----------|:--------|:------------|
-| [Life As An AI Engineer ](https://github.com/AI-Maker-Space/AIE11/tree/main/01_Life_As_An_AI_Engineer) | [Recording!](https://us02web.zoom.us/rec/share/jAarPK0giKhBtd7Sk2SUaJQRTBGQSewEVIgMquMDU0kgeL6e5p3PdGVstrCZx3A.QaC8mvzYsqtvEnoZ) <br> passcode: `9kvErL?d` | [Slides](https://canva.link/5n1omu8z39yrhat) |    Coming Soon!      |  [11/9](https://forms.gle/znovu6Fieh3zaSx49) |
+| [Life As An AI Engineer ](https://github.com/AI-Maker-Space/AIE11/tree/main/01_Life_As_An_AI_Engineer) | [Recording!](https://us02web.zoom.us/rec/share/jAarPK0giKhBtd7Sk2SUaJQRTBGQSewEVIgMquMDU0kgeL6e5p3PdGVstrCZx3A.QaC8mvzYsqtvEnoZ) <br> passcode: `9kvErL?d` | [Slides](https://canva.link/5n1omu8z39yrhat) |    [Week 1](../00_Technical_Challenges/Week 1/README.md)      |  [11/9](https://forms.gle/znovu6Fieh3zaSx49) |
 
 ## Initial Setup
 1. [Environment Setup — **start here**](../00_Docs/Prerequisites/Initial_Setup/README.md)
