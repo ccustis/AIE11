@@ -7,9 +7,9 @@
 
 ### [Quicklinks](https://github.com/AI-Maker-Space/AIE11/tree/main/00_AIE_Quicklinks)
 
-| 📰 Session Sheet | ⏺️ Recording | 🖼️ Slides | 👨‍💻 Repo       | 📝 Homework                                                      | 📁 Feedback |
-|:-----------------|:------------|:----------|:--------------|:-----------------------------------------------------------------|:------------|
-| _TBD_            | _TBD_       | _TBD_     | You are here! | [`Life_As_An_AI_Engineer.ipynb`](./Life_As_An_AI_Engineer.ipynb) | _TBD_       |
+| 📰 Session | ⏺️ Recording | 🖼️ Slides | 📝 Technical Challenge | 📁 Feedback |
+|:-----------------|:------------|:----------|:--------|:------------|
+| You are here! | [Recording!](https://us02web.zoom.us/rec/share/jAarPK0giKhBtd7Sk2SUaJQRTBGQSewEVIgMquMDU0kgeL6e5p3PdGVstrCZx3A.QaC8mvzYsqtvEnoZ) <br> passcode: `9kvErL?d` | [Slides](https://canva.link/5n1omu8z39yrhat) |   [Week 1](../00_Technical_Challenges/Week%201/README.md)      |  [11/9](https://forms.gle/znovu6Fieh3zaSx49) |
 
 ---
 
