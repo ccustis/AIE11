@@ -1,0 +1,26 @@
+[project]
+name = "agentic-search-app"
+version = "0.1.0"
+description = "Technical Challenge 2: an agentic-RAG search service behind a FastAPI endpoint"
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    # agent + RAG stack (same as Session 3/4 notebooks)
+    "langchain>=1.5.0",
+    "langchain-openai>=1.7.4",
+    "langchain-community>=0.3.0",
+    "langchain-text-splitters>=0.3.0",
+    "langgraph>=1.2.21",
+    "langchain-qdrant>=1.1.0",
+    "qdrant-client>=1.20.0",
+    "langchain-tavily>=0.2.0",  # optional second source: web search (needs TAVILY_API_KEY)
+    "openai>=3.50.0",
+    # the web boundary
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.7.0",
+    "python-dotenv>=1.2.4",
+]
+
+# Add a dependency with:  uv add <package>
+# Step 4 augmentations may need one — sse-starlette (streaming) or a reranker, for example.

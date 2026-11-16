@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agentic Wellness Search — starter</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    textarea { width: 100%; box-sizing: border-box; padding: .6rem; font: inherit; }
+    button { margin-top: .5rem; padding: .5rem 1rem; font: inherit; cursor: pointer; }
+    .banner { background: #fff3cd; color: #664d03; border: 1px solid #ffe69c; padding: .6rem .8rem; border-radius: 6px; font-size: .9rem; }
+    .answer { white-space: pre-wrap; margin-top: 1rem; padding: .8rem; border: 1px solid #8884; border-radius: 6px; }
+    .source { font-size: .85rem; color: #6a6a6a; border-left: 3px solid #8884; padding-left: .6rem; margin: .4rem 0; }
+    .tag { font-size: .75rem; padding: .1rem .4rem; border-radius: 4px; background: #8882; }
+  </style>
+</head>
+<body>
+  <h1>Agentic Wellness Search</h1>
+
+  <p class="banner">
+    ⚠️ <strong>This is a starter page — part of the challenge is to replace it.</strong>
+    It exists only to prove the backend works. Build your own UI (streaming, chat history,
+    a sources panel, your own styling) against the same <code>POST /ask</code> endpoint.
+    API docs are at <a href="/docs">/docs</a>.
+  </p>
+
+  <textarea id="q" rows="3" placeholder="Ask a wellness question…">What are some tips for better sleep?</textarea>
+  <button id="go">Ask</button>
+
+  <div id="out"></div>
+
+  <script>
+    const out = document.getElementById("out");
+    document.getElementById("go").addEventListener("click", async () => {
+      const question = document.getElementById("q").value.trim();
+      if (!question) return;
+      out.innerHTML = "<p>Thinking…</p>";
+      try {
+        const res = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, k: 3 }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          out.innerHTML = `<p class="banner">${res.status}: ${err.detail || "request failed"}</p>`;
+          return;
+        }
+        const data = await res.json();
+        const sources = (data.sources || [])
+          .map((s) => `<div class="source">[chunk ${s.chunk_id} · ${s.score.toFixed(3)}] ${s.preview}</div>`)
+          .join("");
+        out.innerHTML =
+          `<div class="answer">${data.answer}</div>` +
+          `<p><span class="tag">retrieval: ${data.used_retrieval ? "used" : "not used"}</span></p>` +
+          sources;
+      } catch (e) {
+        out.innerHTML = `<p class="banner">Network error: ${e}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
