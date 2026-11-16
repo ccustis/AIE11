@@ -7,9 +7,9 @@
 
 ### [Quicklinks](https://github.com/AI-Maker-Space/AIE11/tree/main/00_AIE_Quicklinks)
 
-| 📰 Session Sheet | ⏺️ Recording     | 🖼️ Slides        | 👨‍💻 Repo         | 📝 Homework      | 📁 Feedback       |
-|:-----------------|:-----------------|:-----------------|:-----------------|:-----------------|:-----------------|
-| ||  | You are here! |  |  |
+| 📰 Session | ⏺️ Recording | 🖼️ Slides | 📝 Technical Challenge | 📁 Feedback |
+|:-----------------|:------------|:----------|:--------|:------------|
+| You are here! | [Recording!](https://us02web.zoom.us/rec/share/AvYfIK8j-wK7T9Qr2jOvTFgIj6ATBlxQFQ8GU2PHrpYfUhhItQffi1k_ANj9Blx2.BaekcO2DlvHyNrPu) <br> passcode: `kJsHtX0$` | [Slides](https://canva.link/921395kh21i85kf) |    [TC 1](../00_Technical_Challenges/Week%201/README.md)      |  [11/11](https://forms.gle/AEAU7Xt31yVyXbmU7) |
 
 
 
