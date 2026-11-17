@@ -6,6 +6,7 @@ messages; an API promises one clean, validated object. You close that gap here.
 """
 
 from pathlib import Path
+import re
 
 from langchain_core.messages import HumanMessage
 from langchain_core.runnables import Runnable
@@ -13,7 +14,11 @@ from langchain_core.runnables import Runnable
 from .graph import build_agent_graph
 from .index import build_retriever
 from .schemas import AskRequest, AskResponse, Source, TraceStep
-from .tools import build_web_search_tool, make_search_tool
+from .tools import (
+    build_web_search_tool,
+    make_search_tool,
+    WELLNESS_SEARCH_TOOL_NAME,
+)
 
 
 def build_agent(corpus_path: Path, k: int = 3) -> Runnable:
@@ -73,4 +78,116 @@ def answer_question(request: AskRequest, agent: Runnable) -> AskResponse:
     live on `getattr(msg, "tool_calls", None)`. A ToolMessage carries `.name` and `.content`.
     Keep this function pure data-shaping — no model or retriever calls happen here.
     """
-    raise NotImplementedError("Write answer_question() in agent_app/service.py")
+    
+    # 1. Run the agent with the user's question
+    result = agent.invoke({
+        "messages": [HumanMessage(content=request.question)]
+    })
+
+    messages = result["messages"]
+
+    # 2. Extract the final answer
+    answer = str(messages[-1].content)
+
+    # 3. Prepare the trace and source collections
+    trace = []
+    sources = []
+    used_retrieval = False
+    seen_chunks = set()
+
+    # Match the source headers produced by our search tool
+    source_pattern = re.compile(
+        r"^\[source chunk_id=(\d+) score=([-+]?\d+(?:\.\d+)?)\][ \t]*$",
+        re.MULTILINE,
+    )
+
+    # 4. Walk through the agent's message history
+    for msg in messages:
+        role = getattr(msg, "type", None)
+
+        # Record the model's tool requests
+        if role == "ai":
+            tool_calls = getattr(msg, "tool_calls", []) or []
+
+            if tool_calls:
+                details = []
+
+                for call in tool_calls:
+                    tool_name = call.get("name", "")
+                    tool_args = call.get("args", {})
+
+                    details.append(
+                        f"Called {tool_name} with {tool_args}"
+                    )
+
+                    if tool_name == WELLNESS_SEARCH_TOOL_NAME:
+                        used_retrieval = True
+
+                trace.append(
+                    TraceStep(
+                        node="agent",
+                        detail="; ".join(details),
+                    )
+                )
+
+            else:
+                trace.append(
+                    TraceStep(
+                        node="agent",
+                        detail=str(msg.content),
+                    )
+                )
+
+        # Record tool results
+        elif role == "tool":
+            tool_name = getattr(msg, "name", "")
+            tool_content = str(msg.content)
+
+            trace.append(
+                TraceStep(
+                    node="tools",
+                    detail=f"{tool_name}: {tool_content}",
+                )
+            )
+
+            # Only parse citations from the wellness tool
+            if tool_name != WELLNESS_SEARCH_TOOL_NAME:
+                continue
+
+            used_retrieval = True
+
+            # Find each source block in the returned text
+            matches = list(source_pattern.finditer(tool_content))
+
+            for i, match in enumerate(matches):
+                chunk_id = int(match.group(1))
+                score = float(match.group(2))
+
+                start = match.end()
+
+                if i + 1 < len(matches):
+                    end = matches[i + 1].start()
+                else:
+                    end = len(tool_content)
+
+                chunk_text = tool_content[start:end].strip()
+
+                # Avoid duplicate citations
+                if chunk_id not in seen_chunks:
+                    sources.append(
+                        Source(
+                            chunk_id=chunk_id,
+                            score=score,
+                            preview=chunk_text[:160],
+                        )
+                    )
+                    seen_chunks.add(chunk_id)
+
+    # 5. Return the validated API response
+    return AskResponse(
+        answer=answer,
+        used_retrieval=used_retrieval,
+        sources=sources,
+        trace=trace,
+    )
+

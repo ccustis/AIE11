@@ -73,4 +73,41 @@ def make_search_tool(retriever: BaseRetriever) -> BaseTool:
     Hint: define an inner `@tool`-decorated function and `return` it. The decorator turns a
     function into a tool; closing over `retriever` is what lets the tool reach your index.
     """
-    raise NotImplementedError("Write make_search_tool() in agent_app/tools.py")
+    
+    
+    @tool
+    def search_wellness_knowledge(query: str) -> str:
+        """Search the wellness knowledge base for evidence about
+        exercise, hydration, nutrition, sleep, and healthy habits.
+        Use this tool when a question requires information from the
+        wellness guide. Do not use it for greetings, arithmetic,
+        or questions unrelated to the guide.
+        """
+        
+        # 1. Retrieve relevant document chunks
+        documents = retriever.invoke(query)
+
+        # 2. Handle cases with no retrieved documents
+        if not documents:
+            return "No relevant information found in the wellness knowledge base."
+
+        # 3. Format each retrieved document with source information
+        source_blocks = []
+
+        for document in documents:
+            chunk_id = document.metadata.get("chunk_id", "unknown")
+
+            source_line = SOURCE_LINE.format(
+                chunk_id=chunk_id,
+                score=0.0,
+            )
+
+            source_blocks.append(
+                f"{source_line}\n{document.page_content}"
+            )
+
+        # 4. Return all source blocks as a single string
+        return "\n\n".join(source_blocks)
+
+    return search_wellness_knowledge
+

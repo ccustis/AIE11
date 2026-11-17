@@ -13,7 +13,11 @@ Task 4). Two differences here:
 from pathlib import Path
 
 from langchain_core.retrievers import BaseRetriever
-
+from langchain_community.document_loaders import TextLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings
+from langchain_qdrant import QdrantVectorStore
+from qdrant_client import QdrantClient, models
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 QDRANT_PATH = Path(__file__).resolve().parent.parent / "qdrant_storage"  # on-disk, gitignored
 
@@ -55,4 +59,56 @@ def build_retriever(corpus_path: Path, k: int = 3) -> BaseRetriever:
     Hosted/shared instead? Run a Qdrant server and swap the client for
     `QdrantClient(url="http://localhost:6333")` — that's the multi-process production path.
     """
-    raise NotImplementedError("Write build_retriever() in agent_app/index.py")
+    
+    
+    # 1. Load the source document
+    documents = TextLoader(corpus_path).load()
+
+    # 2. Split the document into overlapping chunks
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=100,
+    )
+
+    chunks = text_splitter.split_documents(documents)
+
+    # 3. Assign each chunk a unique identifier
+    for i, chunk in enumerate(chunks):
+        chunk.metadata["chunk_id"] = i
+
+    # 4. Initialize the OpenAI embedding model
+    embeddings = OpenAIEmbeddings(model=EMBEDDING_MODEL)
+
+    # 5. Initialize persistent Qdrant storage
+    QDRANT_PATH.mkdir(parents=True, exist_ok=True)
+
+    client = QdrantClient(path=str(QDRANT_PATH))
+
+    collection_name = "wellness_guide"
+
+    # 6. Create the collection only if it is missing
+    if not client.collection_exists(collection_name):
+        client.create_collection(
+            collection_name=collection_name,
+            vectors_config=models.VectorParams(
+                size=1536,
+                distance=models.Distance.COSINE,
+            ),
+        )
+
+    # 7. Connect the collection to LangChain
+    vector_store = QdrantVectorStore(
+        client=client,
+        collection_name=collection_name,
+        embedding=embeddings,
+    )
+
+    # 8. Embed documents only if the collection is empty
+    if client.count(collection_name).count == 0:
+        vector_store.add_documents(chunks)
+
+    # 9. Return a retriever configured for k results
+    return vector_store.as_retriever(
+        search_kwargs={"k": k}
+    )
+

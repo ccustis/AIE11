@@ -12,7 +12,11 @@ from typing import Annotated, Literal, TypedDict
 from langchain_core.messages import BaseMessage
 from langchain_core.runnables import Runnable
 from langchain_core.tools import BaseTool
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage
 from langgraph.graph.message import add_messages
+from langgraph.graph import StateGraph, START, END
+from langgraph.prebuilt import ToolNode
 
 from .index import CHAT_MODEL
 
@@ -43,7 +47,12 @@ def should_continue(state: AgentState) -> Literal["tools", "end"]:
     This function is the decision `create_agent` made for you in Session 3. Look at the last
     message in `state["messages"]` and check its `.tool_calls`.
     """
-    raise NotImplementedError("Write should_continue() in agent_app/graph.py")
+    last_message = state["messages"][-1]
+
+    if last_message.tool_calls:
+        return "tools"
+    else:
+        return "end" 
 
 
 def build_agent_graph(tools: list[BaseTool]) -> Runnable:
@@ -75,4 +84,43 @@ def build_agent_graph(tools: list[BaseTool]) -> Runnable:
     Guardrail worth knowing: a compiled graph takes a `recursion_limit` at invoke time, so a
     confused loop stops instead of running forever. Bounding it cleanly is a Step 4 option.
     """
-    raise NotImplementedError("Write build_agent_graph() in agent_app/graph.py")
+        # Initialize the model and bind available tools
+    llm = ChatOpenAI(model=CHAT_MODEL, temperature=0)
+    llm_with_tools = llm.bind_tools(tools)
+
+    # Define the agent node
+    def agent_node(state: AgentState):
+        messages = [
+            SystemMessage(content=SYSTEM_PROMPT),
+            *state["messages"],
+        ]
+
+        response = llm_with_tools.invoke(messages)
+        return {"messages": [response]}
+
+    # Create the graph
+    graph = StateGraph(AgentState)
+
+    # Add the agent and tool nodes
+    graph.add_node("agent", agent_node)
+    graph.add_node("tools", ToolNode(tools))
+
+    # Start with the agent
+    graph.add_edge(START, "agent")
+
+    # Route based on whether the model requested a tool
+    graph.add_conditional_edges(
+        "agent",
+        should_continue,
+        {
+            "tools": "tools",
+            "end": END,
+        },
+    )
+
+    # Return to the agent after executing tools
+    graph.add_edge("tools", "agent")
+
+    # Compile and return the agent graph
+    return graph.compile()
+    
