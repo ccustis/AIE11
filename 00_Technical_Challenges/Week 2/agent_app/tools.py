@@ -76,37 +76,66 @@ def make_search_tool(retriever: BaseRetriever) -> BaseTool:
     
     
     @tool
-    def search_wellness_knowledge(query: str) -> str:
+    def search_wellness_knowledge(
+        query: str,
+        subqueries: list[str] | None = None,
+    ) -> str:
         """Search the wellness knowledge base for evidence about
         exercise, hydration, nutrition, sleep, and healthy habits.
-        Use this tool when a question requires information from the
-        wellness guide. Do not use it for greetings, arithmetic,
-        or questions unrelated to the guide.
-        """
-        
-        # 1. Retrieve relevant document chunks
-        documents = retriever.invoke(query)
 
-        # 2. Handle cases with no retrieved documents
-        if not documents:
+        Use this tool when answering questions about the wellness guide.
+
+        For questions involving multiple distinct topics, provide
+        focused subqueries, one for each topic. For example, a
+        hydration-and-sleep question should have separate searches
+        for water intake and recommended sleep duration.
+
+        For single-topic questions, use only query.
+        Do not use this tool for greetings, arithmetic, or
+        unrelated questions.
+        """
+
+        # Use focused subqueries when provided
+        queries = [
+            q.strip()
+            for q in (subqueries or [])
+            if q.strip()
+        ]
+
+        if not queries:
+            queries = [query]
+
+        # Limit the number of searches
+        queries = queries[:3]
+
+        source_blocks = []
+        seen_chunks = set()
+
+        # Retrieve evidence for each query
+        for search_query in queries:
+            documents = retriever.invoke(search_query)
+
+            for document in documents:
+                chunk_id = document.metadata["chunk_id"]
+
+                # Avoid duplicate chunks
+                if chunk_id in seen_chunks:
+                    continue
+
+                seen_chunks.add(chunk_id)
+
+                source_line = SOURCE_LINE.format(
+                    chunk_id=chunk_id,
+                    score=0.0,
+                )
+
+                source_blocks.append(
+                    f"{source_line}\n{document.page_content}"
+                )
+
+        if not source_blocks:
             return "No relevant information found in the wellness knowledge base."
 
-        # 3. Format each retrieved document with source information
-        source_blocks = []
-
-        for document in documents:
-            chunk_id = document.metadata.get("chunk_id", "unknown")
-
-            source_line = SOURCE_LINE.format(
-                chunk_id=chunk_id,
-                score=0.0,
-            )
-
-            source_blocks.append(
-                f"{source_line}\n{document.page_content}"
-            )
-
-        # 4. Return all source blocks as a single string
         return "\n\n".join(source_blocks)
 
     return search_wellness_knowledge

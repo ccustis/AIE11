@@ -1,63 +1,466 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agentic Wellness Search — starter</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wellness Intelligence | Agentic Search</title>
+
   <style>
-    :root { color-scheme: light dark; }
-    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
-    textarea { width: 100%; box-sizing: border-box; padding: .6rem; font: inherit; }
-    button { margin-top: .5rem; padding: .5rem 1rem; font: inherit; cursor: pointer; }
-    .banner { background: #fff3cd; color: #664d03; border: 1px solid #ffe69c; padding: .6rem .8rem; border-radius: 6px; font-size: .9rem; }
-    .answer { white-space: pre-wrap; margin-top: 1rem; padding: .8rem; border: 1px solid #8884; border-radius: 6px; }
-    .source { font-size: .85rem; color: #6a6a6a; border-left: 3px solid #8884; padding-left: .6rem; margin: .4rem 0; }
-    .tag { font-size: .75rem; padding: .1rem .4rem; border-radius: 4px; background: #8882; }
+    :root {
+      --navy: #162b39;
+      --teal: #187d70;
+      --teal-light: #e3f3ed;
+      --cream: #f7f8f5;
+      --white: #ffffff;
+      --muted: #61717b;
+      --line: #dce4e2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--navy);
+      font-family: -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 24px max(24px, calc((100% - 1100px)/2));
+    }
+
+    .brand {
+      font-size: 14px;
+      font-weight: 650;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .brand span { color: #80d5c1; }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 55px 24px 80px;
+    }
+
+    .eyebrow {
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 50px);
+      letter-spacing: -1.5px;
+      line-height: 1.15;
+      margin: 12px 0 16px;
+    }
+
+    .intro {
+      max-width: 700px;
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 34px;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 26px;
+      margin-bottom: 22px;
+      box-shadow: 0 5px 20px rgba(20, 40, 50, 0.035);
+    }
+
+    h2 {
+      font-size: 19px;
+      margin: 0 0 16px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 650;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 115px;
+      resize: vertical;
+      padding: 16px;
+      border: 1px solid #cbd6d4;
+      border-radius: 9px;
+      font: inherit;
+      color: var(--navy);
+      background: white;
+    }
+
+    textarea:focus, input:focus {
+      outline: 2px solid var(--teal);
+      outline-offset: 2px;
+    }
+
+    .form-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    button {
+      background: var(--teal);
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 23px;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    button:hover { background: #10665b; }
+    button:disabled { opacity: .6; cursor: wait; }
+
+    .small { color: var(--muted); font-size: 12px; }
+
+    .examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .example {
+      background: var(--teal-light);
+      border: 1px solid #c6e6d9;
+      color: #205e54;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 550;
+    }
+
+    .example:hover {
+      background: #cfe9df;
+      color: var(--navy);
+    }
+
+    .results {
+      display: none;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .results.visible { display: grid; }
+
+    .answer-text {
+      font-size: 15px;
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
+
+    .answer-text strong { color: var(--teal); }
+
+    .status {
+      display: inline-block;
+      padding: 5px 11px;
+      border-radius: 99px;
+      font-size: 12px;
+      background: var(--teal-light);
+      color: #22695c;
+      margin-bottom: 18px;
+    }
+
+    .source {
+      background: #f8faf9;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 13px;
+      margin-bottom: 11px;
+    }
+
+    .source-title {
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .source p {
+      font-size: 13px;
+      color: #4b5b65;
+      margin: 6px 0 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    details {
+      border-top: 1px solid var(--line);
+      padding: 13px 0;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 650;
+      font-size: 13px;
+    }
+
+    pre {
+      background: #f1f5f3;
+      padding: 12px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      border-radius: 7px;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .error {
+      color: #a53632;
+      background: #fff0ee;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 45px;
+    }
+
+    @media (max-width: 750px) {
+      main { padding-top: 35px; }
+      .results.visible { grid-template-columns: 1fr; }
+      .panel { padding: 20px; }
+    }
   </style>
 </head>
+
 <body>
-  <h1>Agentic Wellness Search</h1>
+  <header>
+    <div class="brand">WELLNESS <span>INTELLIGENCE</span></div>
+  </header>
 
-  <p class="banner">
-    ⚠️ <strong>This is a starter page — part of the challenge is to replace it.</strong>
-    It exists only to prove the backend works. Build your own UI (streaming, chat history,
-    a sources panel, your own styling) against the same <code>POST /ask</code> endpoint.
-    API docs are at <a href="/docs">/docs</a>.
-  </p>
+  <main>
+    <div class="eyebrow">An Agentic RAG Demonstration</div>
 
-  <textarea id="q" rows="3" placeholder="Ask a wellness question…">What are some tips for better sleep?</textarea>
-  <button id="go">Ask</button>
+    <h1>Better questions.<br>Evidence-informed answers.</h1>
 
-  <div id="out"></div>
+    <p class="intro">
+      Explore wellness knowledge through an AI agent that decides
+      when to retrieve supporting information. Examine both
+      its answers and the evidence behind them.
+    </p>
+
+    <section class="panel">
+      <h2>Ask the wellness agent</h2>
+
+      <form id="askForm">
+        <label for="question">Your question</label>
+
+        <textarea
+          id="question"
+          placeholder="What would you like to know about wellness?"
+          required
+        ></textarea>
+
+        <div class="form-footer">
+          <span class="small">
+            Grounded in the Personal Wellness Guide
+          </span>
+          <button id="askButton" type="submit">
+            Explore question
+          </button>
+        </div>
+      </form>
+
+      <div class="examples">
+        <button class="example" type="button"
+          data-question="How much aerobic exercise should adults get weekly?">
+          Exercise recommendations
+        </button>
+
+        <button class="example" type="button"
+          data-question="What are the daily hydration and sleep recommendations?">
+          Hydration and sleep
+        </button>
+
+        <button class="example" type="button"
+          data-question="What is 125 times 8?">
+          Test without retrieval
+        </button>
+      </div>
+    </section>
+
+    <p id="message" class="small" role="status" aria-live="polite"></p>
+
+    <div id="results" class="results">
+      <section class="panel">
+        <h2>Agent response</h2>
+        <div id="retrievalStatus" class="status"></div>
+        <div id="answer" class="answer-text"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Supporting evidence</h2>
+        <div id="sources"></div>
+      </section>
+    </div>
+
+    <section id="tracePanel" class="panel" hidden>
+      <h2>Behind the answer</h2>
+      <p class="small">
+        Explore the decisions and tool executions
+        recorded by the agent.
+      </p>
+      <div id="trace"></div>
+    </section>
+
+    <footer>
+      AI Makerspace · Technical Challenge 2<br>
+      Experimental agentic retrieval demonstration.
+      Not a substitute for professional medical advice.
+    </footer>
+  </main>
 
   <script>
-    const out = document.getElementById("out");
-    document.getElementById("go").addEventListener("click", async () => {
-      const question = document.getElementById("q").value.trim();
-      if (!question) return;
-      out.innerHTML = "<p>Thinking…</p>";
+    const form = document.getElementById("askForm");
+    const input = document.getElementById("question");
+    const button = document.getElementById("askButton");
+    const message = document.getElementById("message");
+
+    const results = document.getElementById("results");
+    const answer = document.getElementById("answer");
+    const sources = document.getElementById("sources");
+    const trace = document.getElementById("trace");
+
+    const status = document.getElementById("retrievalStatus");
+    const tracePanel = document.getElementById("tracePanel");
+
+    // Escape model-generated text before formatting it.
+    function formatAnswer(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/^#{1,3}\s+(.+)$/gm, "<strong>$1</strong>")
+        .replace(/\n/g, "<br>");
+    }
+
+    function renderSources(items) {
+      sources.replaceChildren();
+
+      if (!items.length) {
+        sources.textContent =
+          "No document retrieval was used for this answer.";
+        return;
+      }
+
+      items.forEach((source) => {
+        const card = document.createElement("div");
+        card.className = "source";
+
+        const heading = document.createElement("div");
+        heading.className = "source-title";
+        heading.textContent = `Source · Chunk ${source.chunk_id}`;
+
+        const preview = document.createElement("p");
+        preview.textContent = source.preview;
+
+        card.append(heading, preview);
+        sources.appendChild(card);
+      });
+    }
+
+    function renderTrace(steps) {
+      trace.replaceChildren();
+
+      steps.forEach((step, index) => {
+        const item = document.createElement("details");
+        const heading = document.createElement("summary");
+        const content = document.createElement("pre");
+
+        heading.textContent =
+          `${index + 1}. ${step.node === "tools"
+            ? "Tool execution" : "Agent decision"}`;
+
+        content.textContent = step.detail;
+
+        item.append(heading, content);
+        trace.appendChild(item);
+      });
+    }
+
+    async function askQuestion(question) {
+      if (!question.trim()) return;
+
+      button.disabled = true;
+      button.textContent = "Thinking...";
+      message.textContent = "The agent is processing your question.";
+      results.classList.remove("visible");
+      tracePanel.hidden = true;
+
       try {
-        const res = await fetch("/ask", {
+        const response = await fetch("/ask", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ question, k: 3 }),
+          body: JSON.stringify({
+            question: question.trim(),
+            k: 3
+          })
         });
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          out.innerHTML = `<p class="banner">${res.status}: ${err.detail || "request failed"}</p>`;
-          return;
+
+        if (!response.ok) {
+          throw new Error(`API request failed: ${response.status}`);
         }
-        const data = await res.json();
-        const sources = (data.sources || [])
-          .map((s) => `<div class="source">[chunk ${s.chunk_id} · ${s.score.toFixed(3)}] ${s.preview}</div>`)
-          .join("");
-        out.innerHTML =
-          `<div class="answer">${data.answer}</div>` +
-          `<p><span class="tag">retrieval: ${data.used_retrieval ? "used" : "not used"}</span></p>` +
-          sources;
-      } catch (e) {
-        out.innerHTML = `<p class="banner">Network error: ${e}</p>`;
+
+        const data = await response.json();
+
+        answer.innerHTML = formatAnswer(data.answer);
+
+        status.textContent = data.used_retrieval
+          ? "Knowledge base consulted"
+          : "Answered without retrieval";
+
+        renderSources(data.sources || []);
+        renderTrace(data.trace || []);
+
+        results.classList.add("visible");
+        tracePanel.hidden = false;
+        message.textContent = "Response completed.";
+
+      } catch (error) {
+        message.textContent = `Error: ${error.message}`;
+      } finally {
+        button.disabled = false;
+        button.textContent = "Explore question";
       }
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      askQuestion(input.value);
+    });
+
+    document.querySelectorAll(".example").forEach((item) => {
+      item.addEventListener("click", () => {
+        input.value = item.dataset.question;
+        askQuestion(input.value);
+      });
     });
   </script>
 </body>
