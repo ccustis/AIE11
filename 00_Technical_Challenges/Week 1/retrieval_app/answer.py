@@ -31,7 +31,32 @@ def build_messages(question: str, hits: list[Hit]) -> list[dict]:
     Hint: Session 2's RAG_SYSTEM_TEMPLATE is a good starting point, and a
     better one once you have read Step 3's failures and edited it.
     """
-    raise NotImplementedError("Write build_messages() in retrieval_app/answer.py")
+    if hits:
+        context = "\n\n".join(
+            f"[chunk {hit.chunk_id}] (score {hit.score:.3f})\n{hit.text}"
+            for hit in hits
+        )
+    else:
+        context = "(no passages were retrieved)"
+
+    system = (
+        "You are a personal wellness assistant. Answer only from the retrieved "
+        "passages. Each passage is already labeled with its chunk id; cite those "
+        "ids, such as [chunk 4], and do not renumber them as Source 1, Source 2. "
+        "If the passages do not contain the answer, or if no passages were "
+        "retrieved, say: I don't have information about that in the wellness guide. "
+        "Do not fill the gap from outside knowledge. Keep the answer concise, and "
+        "remind the reader to consult a healthcare professional for medical advice."
+    )
+    user = (
+        f"Retrieved passages:\n{context}\n\n"
+        f"Question: {question}\n\n"
+        "Answer using only the passages above, and cite the chunk ids you used."
+    )
+    return [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
 
 
 def answer(question: str, hits: list[Hit]) -> str:
@@ -41,4 +66,9 @@ def answer(question: str, hits: list[Hit]) -> str:
     then dig out `.choices[0].message.content`. Look up what `temperature`
     does to your results when you run the same question twice.
     """
-    raise NotImplementedError("Write answer() in retrieval_app/answer.py")
+    response = client().chat.completions.create(
+        model=CHAT_MODEL,
+        messages=build_messages(question, hits),
+        temperature=0,
+    )
+    return response.choices[0].message.content or ""

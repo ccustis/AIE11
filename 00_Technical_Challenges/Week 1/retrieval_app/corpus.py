@@ -24,7 +24,7 @@ def load_corpus(path: Path) -> str:
     Hint: this is three lines. `open()`, or `Path.read_text()`. Mind the
     encoding: read it as utf-8, and your own corpus may need you to mean it.
     """
-    raise NotImplementedError("Write load_corpus() in retrieval_app/corpus.py")
+    return path.read_text(encoding="utf-8")
 
 
 def split_corpus(text: str, chunk_size: int = 1000, chunk_overlap: int = 200) -> list[str]:
@@ -47,4 +47,7 @@ def split_corpus(text: str, chunk_size: int = 1000, chunk_overlap: int = 200) ->
     Hint: a range() that steps by (chunk_size - chunk_overlap), slicing as it
     goes. Why does the step subtract the overlap rather than add it?
     """
-    raise NotImplementedError("Write split_corpus() in retrieval_app/corpus.py")
+    if chunk_size <= chunk_overlap:
+        raise ValueError("chunk_size must be greater than chunk_overlap")
+    step = chunk_size - chunk_overlap
+    return [text[i : i + chunk_size] for i in range(0, len(text), step)]
